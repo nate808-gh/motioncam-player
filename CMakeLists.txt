@@ -13,6 +13,9 @@ message(STATUS "  Source Directory: ${PROJECT_SOURCE_DIR}")
 message(STATUS "  Binary Directory: ${CMAKE_BINARY_DIR}")
 message(STATUS "---------------------------------------------------------------------")
 
+# Next 1 line modified from original to compile on linux
+find_package(Threads REQUIRED)
+
 set(APP_ROOT_DIR        "${PROJECT_SOURCE_DIR}")
 set(APP_EXTERNAL_DIR    "${APP_ROOT_DIR}/external")
 set(APP_ASSETS_DIR      "${APP_ROOT_DIR}/assets")
@@ -156,7 +159,8 @@ list(APPEND APP_SOURCES "${IMGUI_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp")
 
 message(STATUS "Application sources for executable: ${APP_SOURCES}")
 
-add_executable(${PROJECT_NAME} WIN32 "")
+#Next 1 line modified to compile on linux
+add_executable(${PROJECT_NAME} "")
 target_sources(${PROJECT_NAME} PRIVATE ${APP_SOURCES})
 
 if(WIN32 AND EXISTS "${APP_ROOT_DIR}/icon.rc")
@@ -196,6 +200,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   "${APP_EXTERNAL_DIR}/tinydngwriter"
 )
 
+# Next 25 lines modified from original to compile on linux
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(SDL2_ARCH_SUFFIX "x64")
 else()
@@ -203,19 +208,34 @@ else()
 endif()
 set(SDL2_LIBRARY_DIR "${SDL2_PATH}/lib/${SDL2_ARCH_SUFFIX}")
 
-set(GLFW_LIB_PATH_VC_SPECIFIC "${GLFW_PATH}/lib-vc2022/glfw3.lib")
-if(NOT EXISTS "${GLFW_LIB_PATH_VC_SPECIFIC}" AND WIN32 AND MSVC)
-    message(FATAL_ERROR "Pre-built GLFW library not found at ${GLFW_LIB_PATH_VC_SPECIFIC}. Please check GLFW_PATH or adjust for your compiler.")
+if(WIN32 AND MSVC)
+    set(GLFW_LIB_PATH_VC_SPECIFIC "${GLFW_PATH}/lib-vc2022/glfw3.lib")
+    if(NOT EXISTS "${GLFW_LIB_PATH_VC_SPECIFIC}")
+        message(FATAL_ERROR "Pre-built GLFW library not found at ${GLFW_LIB_PATH_VC_SPECIFIC}. Please check GLFW_PATH or adjust for your compiler.")
+    endif()
+    set(SDL2_LIB "${SDL2_LIBRARY_DIR}/SDL2.lib")
+else()
+    # On Linux or other platforms, explicitly set full path to GLFW and SDL2 libraries
+
+    # You can hardcode the path to libglfw.so (adjust if different)
+    set(GLFW_LIB_PATH_VC_SPECIFIC "/usr/lib64/libglfw.so")
+
+    # Similarly for SDL2, adjust if necessary
+    set(SDL2_LIB "SDL2")
+
+    # Optional: you can also specify SDL2 full path like GLFW if you want,
+    # e.g., set(SDL2_LIB "/usr/lib64/libSDL2.so")
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    motioncam_decoder
-    imgui
-    glm
-    "${GLFW_LIB_PATH_VC_SPECIFIC}"
-    "${SDL2_LIBRARY_DIR}/SDL2.lib"
-    ${Vulkan_LIBRARIES}
-)
+# Next 8 lines modified from original to compile on linux
+ target_link_libraries(${PROJECT_NAME} PRIVATE
+     motioncam_decoder
+     imgui
+     glm 
+     ${GLFW_LIB_PATH_VC_SPECIFIC}
+     ${SDL2_LIB}
+     ${Vulkan_LIBRARIES}
+ )
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE Shlwapi.lib Comdlg32.lib dwmapi.lib Shell32.lib)

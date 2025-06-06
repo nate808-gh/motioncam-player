@@ -2,6 +2,7 @@
 #ifndef APP_H
 #define APP_H
 
+#include <thread>
 #include <string>
 #include <vector>
 #include <memory>
@@ -12,6 +13,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
+
 
 #define GLFW_INCLUDE_VULKAN
 #define GLM_FORCE_RADIANS

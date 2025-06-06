@@ -55,7 +55,7 @@ namespace GuiOverlay {
         ImGui::NewFrame();
     }
 
-    GuiOverlay::UIData GuiOverlay::gatherData(App* appInstance) {
+    UIData gatherData(App* appInstance) {
         UIData data = {};
         if (!appInstance) return data;
 
