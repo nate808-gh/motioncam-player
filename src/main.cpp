@@ -1,4 +1,5 @@
 // FILE: src/main.cpp
+#include <QDir>
 #include <iostream>
 #include <string>
 #include <filesystem>
@@ -111,47 +112,8 @@ static std::string OpenMcrawDialog() {
 }
 
 int main(int argc, char* argv[]) {
-#if defined(_WIN32) && !defined(NDEBUG)
-#endif
-
-#ifdef _WIN32
-    static const wchar_t* kMutexName = L"MCRAW_PLAYER_SINGLE_INSTANCE_MUTEX_V2_UNIQUE";
-    SingleInstanceGuard instanceGuard(kMutexName);
-
-    LogToFile(std::string("[main] SingleInstanceGuard created. Mutex handle valid: ") + (instanceGuard.getMutexHandle() != NULL && instanceGuard.getMutexHandle() != INVALID_HANDLE_VALUE ? "YES" : "NO") +
-        ". GetLastError() after CreateMutexW: " + std::to_string(instanceGuard.getLastErrorAfterCreation()) +
-        ". alreadyRunning() reports: " + (instanceGuard.alreadyRunning() ? "true" : "false"));
-
-    if (instanceGuard.alreadyRunning()) {
-        LogToFile("[main] Another instance is already running (detected by alreadyRunning() == true).");
-
-        if (argc >= 2 && argv[1] != nullptr) {
-            HWND hwnd = FindWindowW(L"MCRAW_PLAYER_IPC_WND_CLASS", nullptr);
-            if (hwnd) {
-                LogToFile(std::string("[main] Found existing instance window (HWND: ") + std::to_string(reinterpret_cast<uintptr_t>(hwnd)) + "). Sending file: " + argv[1]);
-                std::filesystem::path fsPath(argv[1]);
-                std::wstring wFilePath = fsPath.wstring();
-
-                COPYDATASTRUCT cds{};
-                cds.dwData = 0x4D435257;
-                cds.cbData = static_cast<DWORD>((wFilePath.length() + 1) * sizeof(wchar_t));
-                cds.lpData = (void*)wFilePath.c_str();
-
-                SendMessageW(hwnd, WM_COPYDATA, (WPARAM)NULL, (LPARAM)&cds);
-                LogToFile("[main] WM_COPYDATA sent.");
-            }
-            else {
-                LogToFile("[main] Could not find existing instance window by class MCRAW_PLAYER_IPC_WND_CLASS to forward arguments.");
-            }
-        }
-        else {
-            LogToFile("[main] No file argument to forward (argc < 2 or argv[1] is null).");
-        }
-        LogToFile("[main] Exiting secondary instance.");
-        return 0;
-    }
-    LogToFile("[main] This appears to be the first instance, or CreateMutexW did not report ERROR_ALREADY_EXISTS for this instance.");
-#endif
+    // Set the working directory to /opt/motioncam-fs-bin to ensure resources are found
+    QDir::setCurrent("/opt/motioncam-fs-bin");
 
     try {
         LogToFile(std::string("[main] Current Working Directory: ") + fs::current_path().string());
@@ -168,7 +130,6 @@ int main(int argc, char* argv[]) {
     else if (argc > 0) {
         LogToFile(std::string("[main] argv[0] is nullptr."));
     }
-
 
     std::string inPath;
     if (argc >= 2 && argv[1] != nullptr) {

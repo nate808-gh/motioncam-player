@@ -1,0 +1,16 @@
+/home/nate/pkg/motioncam-player/cmake-build-release/CMakeFiles/CompileShaders.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/CMakeFiles/MCRAW_Player.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/CMakeFiles/edit_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/CMakeFiles/rebuild_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/glm_build/CMakeFiles/edit_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/glm_build/CMakeFiles/rebuild_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/glm_build/glm/CMakeFiles/glm.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/glm_build/glm/CMakeFiles/edit_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/glm_build/glm/CMakeFiles/rebuild_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/imgui_build/CMakeFiles/imgui.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/imgui_build/CMakeFiles/edit_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/imgui_build/CMakeFiles/rebuild_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/motioncam-decoder/CMakeFiles/motioncam_decoder.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/motioncam-decoder/CMakeFiles/example.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/motioncam-decoder/CMakeFiles/edit_cache.dir
+/home/nate/pkg/motioncam-player/cmake-build-release/motioncam-decoder/CMakeFiles/rebuild_cache.dir

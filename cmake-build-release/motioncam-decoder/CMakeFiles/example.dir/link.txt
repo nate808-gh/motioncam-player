@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/example.dir/link.d CMakeFiles/example.dir/example.cpp.o -o ../bin/example  libmotioncam_decoder.a

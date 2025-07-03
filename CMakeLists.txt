@@ -13,6 +13,9 @@ message(STATUS "  Source Directory: ${PROJECT_SOURCE_DIR}")
 message(STATUS "  Binary Directory: ${CMAKE_BINARY_DIR}")
 message(STATUS "---------------------------------------------------------------------")
 
+# Find Qt6 Core, Gui, and Widgets modules
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+
 # Next 1 line modified from original to compile on linux
 find_package(Threads REQUIRED)
 
@@ -88,8 +91,8 @@ set(SHADER_COMPILED_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders_spv")
 file(MAKE_DIRECTORY ${SHADER_COMPILED_DIR})
 
 set(SHADER_FILES
-    "${APP_SHADERS_SRC_DIR}/fullscreen_quad.vert"
-    "${APP_SHADERS_SRC_DIR}/image_process.frag"
+        "${APP_SHADERS_SRC_DIR}/fullscreen_quad.vert"
+        "${APP_SHADERS_SRC_DIR}/image_process.frag"
 )
 set(COMPILED_SHADER_OUTPUTS "")
 foreach(SHADER_INPUT_FILE ${SHADER_FILES})
@@ -99,16 +102,16 @@ foreach(SHADER_INPUT_FILE ${SHADER_FILES})
         message(FATAL_ERROR "Shader source file not found: ${SHADER_INPUT_FILE}")
     endif()
     add_custom_command(
-        OUTPUT ${SHADER_OUTPUT_FILE}
-        COMMAND ${GLSLANG_VALIDATOR_CMD} -V -o ${SHADER_OUTPUT_FILE} ${SHADER_INPUT_FILE}
-        DEPENDS ${SHADER_INPUT_FILE}
-        COMMENT "Compiling ${SHADER_BASENAME} to SPIR-V"
-        VERBATIM
+            OUTPUT ${SHADER_OUTPUT_FILE}
+            COMMAND ${GLSLANG_VALIDATOR_CMD} -V -o ${SHADER_OUTPUT_FILE} ${SHADER_INPUT_FILE}
+            DEPENDS ${SHADER_INPUT_FILE}
+            COMMENT "Compiling ${SHADER_BASENAME} to SPIR-V"
+            VERBATIM
     )
     list(APPEND COMPILED_SHADER_OUTPUTS ${SHADER_OUTPUT_FILE})
 endforeach()
 add_custom_target(CompileShaders ALL DEPENDS ${COMPILED_SHADER_OUTPUTS}
-    COMMENT "Compiling all GLSL shaders to SPIR-V"
+        COMMENT "Compiling all GLSL shaders to SPIR-V"
 )
 message(STATUS "Shader compilation configured. Output to: ${SHADER_COMPILED_DIR}")
 
@@ -124,34 +127,34 @@ add_subdirectory(motioncam-decoder EXCLUDE_FROM_ALL)
 message(STATUS "Configured motioncam-decoder subproject.")
 
 set(APP_SOURCES
-  src/App/AppInit.cpp
-  src/App/AppLoop.cpp
-  src/App/AppIO.cpp
-  src/App/AppDecode.cpp
-  src/App/AppInput.cpp
-  src/App/AppCleanup.cpp
+        src/App/AppInit.cpp
+        src/App/AppLoop.cpp
+        src/App/AppIO.cpp
+        src/App/AppDecode.cpp
+        src/App/AppInput.cpp
+        src/App/AppCleanup.cpp
 
-  src/Audio/AudioController.cpp
-  src/Audio/AudioHelpers.cpp
+        src/Audio/AudioController.cpp
+        src/Audio/AudioHelpers.cpp
 
-  src/Decoder/DecoderWrapper.cpp
+        src/Decoder/DecoderWrapper.cpp
 
-  src/Graphics/Renderer_VK.cpp
-  src/Graphics/VulkanHelpers.cpp
-  src/Graphics/ImageResource.cpp
-  src/Graphics/Pipeline.cpp
-  src/Graphics/Descriptor.cpp
+        src/Graphics/Renderer_VK.cpp
+        src/Graphics/VulkanHelpers.cpp
+        src/Graphics/ImageResource.cpp
+        src/Graphics/Pipeline.cpp
+        src/Graphics/Descriptor.cpp
 
-  src/Gui/GuiSetup.cpp
-  src/Gui/GuiRender.cpp
-  src/Gui/GuiUtils.cpp
-  src/Gui/GuiStyles.cpp
+        src/Gui/GuiSetup.cpp
+        src/Gui/GuiRender.cpp
+        src/Gui/GuiUtils.cpp
+        src/Gui/GuiStyles.cpp
 
-  src/Playback/PlaybackController.cpp
+        src/Playback/PlaybackController.cpp
 
-  src/Utils/DebugLog.cpp
+        src/Utils/DebugLog.cpp
 
-  src/main.cpp
+        src/main.cpp
 )
 
 list(APPEND APP_SOURCES "${IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.cpp")
@@ -159,7 +162,7 @@ list(APPEND APP_SOURCES "${IMGUI_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp")
 
 message(STATUS "Application sources for executable: ${APP_SOURCES}")
 
-#Next 1 line modified to compile on linux
+# Ensure the Qt6 libraries are linked
 add_executable(${PROJECT_NAME} "")
 target_sources(${PROJECT_NAME} PRIVATE ${APP_SOURCES})
 
@@ -167,6 +170,19 @@ if(WIN32 AND EXISTS "${APP_ROOT_DIR}/icon.rc")
     target_sources(${PROJECT_NAME} PRIVATE "${APP_ROOT_DIR}/icon.rc")
     message(STATUS "Added Windows icon resource: ${APP_ROOT_DIR}/icon.rc")
 endif()
+
+# Link the Qt6 libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        motioncam_decoder
+        imgui
+        glm
+        ${GLFW_LIB_PATH_VC_SPECIFIC}
+        ${SDL2_LIB}
+        ${Vulkan_LIBRARIES}
+)
 
 add_dependencies(${PROJECT_NAME} CompileShaders glm motioncam_decoder imgui)
 
@@ -178,29 +194,29 @@ if(MSVC AND CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-  "${PROJECT_SOURCE_DIR}/include"
-  "${PROJECT_SOURCE_DIR}/include/App"
-  "${PROJECT_SOURCE_DIR}/include/Audio"
-  "${PROJECT_SOURCE_DIR}/include/Decoder"
-  "${PROJECT_SOURCE_DIR}/include/Graphics"
-  "${PROJECT_SOURCE_DIR}/include/Gui"
-  "${PROJECT_SOURCE_DIR}/include/Playback"
-  "${PROJECT_SOURCE_DIR}/include/Utils"
+        "${PROJECT_SOURCE_DIR}/include"
+        "${PROJECT_SOURCE_DIR}/include/App"
+        "${PROJECT_SOURCE_DIR}/include/Audio"
+        "${PROJECT_SOURCE_DIR}/include/Decoder"
+        "${PROJECT_SOURCE_DIR}/include/Graphics"
+        "${PROJECT_SOURCE_DIR}/include/Gui"
+        "${PROJECT_SOURCE_DIR}/include/Playback"
+        "${PROJECT_SOURCE_DIR}/include/Utils"
 
-  "${VMA_INCLUDE_DIR}"
-  "${Vulkan_INCLUDE_DIRS}"
-  "${GLFW_PATH}/include"
-  "${SDL2_PATH}/include"
+        "${VMA_INCLUDE_DIR}"
+        "${Vulkan_INCLUDE_DIRS}"
+        "${GLFW_PATH}/include"
+        "${SDL2_PATH}/include"
 
-  "${APP_ROOT_DIR}/motioncam-decoder/lib/include"
-  "${APP_ROOT_DIR}/motioncam-decoder/thirdparty"
+        "${APP_ROOT_DIR}/motioncam-decoder/lib/include"
+        "${APP_ROOT_DIR}/motioncam-decoder/thirdparty"
 
-  "${IMGUI_SOURCE_DIR}"
-  "${IMGUI_SOURCE_DIR}/backends"
-  "${APP_EXTERNAL_DIR}/tinydngwriter"
+        "${IMGUI_SOURCE_DIR}"
+        "${IMGUI_SOURCE_DIR}/backends"
+        "${APP_EXTERNAL_DIR}/tinydngwriter"
 )
 
-# Next 25 lines modified from original to compile on linux
+# Linux-specific options for GLFW and SDL2
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(SDL2_ARCH_SUFFIX "x64")
 else()
@@ -208,63 +224,35 @@ else()
 endif()
 set(SDL2_LIBRARY_DIR "${SDL2_PATH}/lib/${SDL2_ARCH_SUFFIX}")
 
-if(WIN32 AND MSVC)
-    set(GLFW_LIB_PATH_VC_SPECIFIC "${GLFW_PATH}/lib-vc2022/glfw3.lib")
-    if(NOT EXISTS "${GLFW_LIB_PATH_VC_SPECIFIC}")
-        message(FATAL_ERROR "Pre-built GLFW library not found at ${GLFW_LIB_PATH_VC_SPECIFIC}. Please check GLFW_PATH or adjust for your compiler.")
-    endif()
-    set(SDL2_LIB "${SDL2_LIBRARY_DIR}/SDL2.lib")
-else()
-    # On Linux or other platforms, explicitly set full path to GLFW and SDL2 libraries
+set(GLFW_LIB_PATH_VC_SPECIFIC "/usr/lib64/libglfw.so")
+set(SDL2_LIB "SDL2")
 
-    # You can hardcode the path to libglfw.so (adjust if different)
-    set(GLFW_LIB_PATH_VC_SPECIFIC "/usr/lib64/libglfw.so")
-
-    # Similarly for SDL2, adjust if necessary
-    set(SDL2_LIB "SDL2")
-
-    # Optional: you can also specify SDL2 full path like GLFW if you want,
-    # e.g., set(SDL2_LIB "/usr/lib64/libSDL2.so")
-endif()
-
-# Next 8 lines modified from original to compile on linux
- target_link_libraries(${PROJECT_NAME} PRIVATE
-     motioncam_decoder
-     imgui
-     glm 
-     ${GLFW_LIB_PATH_VC_SPECIFIC}
-     ${SDL2_LIB}
-     ${Vulkan_LIBRARIES}
- )
-
-if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE Shlwapi.lib Comdlg32.lib dwmapi.lib Shell32.lib)
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
-    target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
-elseif(MSVC)
-endif()
-
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        motioncam_decoder
+        imgui
+        glm
+        ${GLFW_LIB_PATH_VC_SPECIFIC}
+        ${SDL2_LIB}
+        ${Vulkan_LIBRARIES}
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${SHADER_COMPILED_DIR}"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders_spv"
-    COMMENT "Copying compiled shaders to executable output directory"
-    VERBATIM
+        COMMENT "Copying compiled shaders to executable output directory"
+        VERBATIM
 )
-message(STATUS "POST_BUILD: Configured to copy ${SHADER_COMPILED_DIR} to $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders_spv")
 
 if(EXISTS "${APP_ASSETS_DIR}")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${APP_ASSETS_DIR}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>/assets"
-        COMMENT "Copying assets to executable output directory"
-        VERBATIM
+            COMMENT "Copying assets to executable output directory"
+            VERBATIM
     )
     message(STATUS "POST_BUILD: Configured to copy ${APP_ASSETS_DIR} to $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets")
 else()
