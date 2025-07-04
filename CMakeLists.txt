@@ -224,7 +224,7 @@ else()
 endif()
 set(SDL2_LIBRARY_DIR "${SDL2_PATH}/lib/${SDL2_ARCH_SUFFIX}")
 
-set(GLFW_LIB_PATH_VC_SPECIFIC "/usr/lib64/libglfw.so")
+set(GLFW_LIB_PATH_VC_SPECIFIC "/usr/lib/x86_64-linux-gnu/libglfw.so")
 set(SDL2_LIB "SDL2")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

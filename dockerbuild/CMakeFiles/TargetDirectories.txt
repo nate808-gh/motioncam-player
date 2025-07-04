@@ -1,0 +1,16 @@
+/workspace/motioncam-player/dockerbuild/CMakeFiles/CompileShaders.dir
+/workspace/motioncam-player/dockerbuild/CMakeFiles/MCRAW_Player.dir
+/workspace/motioncam-player/dockerbuild/CMakeFiles/edit_cache.dir
+/workspace/motioncam-player/dockerbuild/CMakeFiles/rebuild_cache.dir
+/workspace/motioncam-player/dockerbuild/glm_build/CMakeFiles/edit_cache.dir
+/workspace/motioncam-player/dockerbuild/glm_build/CMakeFiles/rebuild_cache.dir
+/workspace/motioncam-player/dockerbuild/glm_build/glm/CMakeFiles/glm.dir
+/workspace/motioncam-player/dockerbuild/glm_build/glm/CMakeFiles/edit_cache.dir
+/workspace/motioncam-player/dockerbuild/glm_build/glm/CMakeFiles/rebuild_cache.dir
+/workspace/motioncam-player/dockerbuild/imgui_build/CMakeFiles/imgui.dir
+/workspace/motioncam-player/dockerbuild/imgui_build/CMakeFiles/edit_cache.dir
+/workspace/motioncam-player/dockerbuild/imgui_build/CMakeFiles/rebuild_cache.dir
+/workspace/motioncam-player/dockerbuild/motioncam-decoder/CMakeFiles/motioncam_decoder.dir
+/workspace/motioncam-player/dockerbuild/motioncam-decoder/CMakeFiles/example.dir
+/workspace/motioncam-player/dockerbuild/motioncam-decoder/CMakeFiles/edit_cache.dir
+/workspace/motioncam-player/dockerbuild/motioncam-decoder/CMakeFiles/rebuild_cache.dir

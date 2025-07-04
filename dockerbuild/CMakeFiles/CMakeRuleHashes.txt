@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+dd48e1ad335c878d56b546b2116326e9 CMakeFiles/CompileShaders
+a6a9dd0b2e4847df83f77e3df776ff93 shaders_spv/fullscreen_quad.vert.spv
+b0f526a41a25e95db36e3c35bb76e128 shaders_spv/image_process.frag.spv
